@@ -1,0 +1,28 @@
+{
+  "name": "carnet-de-recettes-axios-en-cuisine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bahaeAether/Carnet-de-recettes-Axios-en-cuisine.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/bahaeAether/Carnet-de-recettes-Axios-en-cuisine/issues"
+  },
+  "homepage": "https://github.com/bahaeAether/Carnet-de-recettes-Axios-en-cuisine#readme",
+  "dependencies": {
+    "axios": "^1.21.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.5",
+    "tailwindcss": "^4.3.5"
+  }
+}
