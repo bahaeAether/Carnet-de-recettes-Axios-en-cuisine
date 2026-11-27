@@ -24,6 +24,7 @@ export function createRecipeCard(recipe) {
   prepTime.textContent = `Préparation : ${recipe.prepTimeMinutes} minutes`;
 
   const deleteBtn = document.createElement("button");
+  deleteBtn.dataset.id = recipe.localId || recipe.id;
   deleteBtn.textContent = "Supprimer";
   deleteBtn.className =
     "mt-4 rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700";

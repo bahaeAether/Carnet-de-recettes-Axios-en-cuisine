@@ -1,4 +1,4 @@
-import { getRecipes, searchRecipes, addRecipe } from "./api.js";
+import { getRecipes, searchRecipes, addRecipe, deleteRecipe } from "./api.js";
 import {
   displayRecipes,
   updateRecipeCount,
@@ -106,6 +106,12 @@ function resetSearch() {
   displayRecipes(recipes, recipesContainer);
 
   updateRecipeCount(recipes.length, recipesCount);
+
+  if (recipes.length === 0) {
+    emptyState.classList.remove("hidden");
+  } else {
+    emptyState.classList.add("hidden");
+  }
 }
 
 resetSearchBtn.addEventListener("click", resetSearch);
@@ -140,6 +146,8 @@ recipeForm.addEventListener("submit", async (event) => {
 
     const newRecipe = await addRecipe(recipeData);
 
+    newRecipe.localId = Date.now();
+
     recipes.unshift(newRecipe);
 
     displayRecipes(recipes, recipesContainer);
@@ -151,6 +159,8 @@ recipeForm.addEventListener("submit", async (event) => {
     displayValidationErrors({});
 
     showMessage("Recette ajoutée avec succès !", message);
+
+    emptyState.classList.add("hidden");
   } catch (error) {
     console.error("Erreur lors de l'ajout :", error);
   } finally {
@@ -170,3 +180,50 @@ function displayValidationErrors(errors) {
   difficultyError.textContent = errors.difficulty || "";
   prepTimeError.textContent = errors.prepTimeMinutes || "";
 }
+
+recipesContainer.addEventListener("click", async (event) => {
+  const deleteBtn = event.target.closest("button[data-id]");
+
+  if (!deleteBtn) {
+    return;
+  }
+
+  hideMessage(message);
+
+  const id = Number(deleteBtn.dataset.id);
+  const recipe = recipes.find((recipe) => (recipe.localId || recipe.id) === id);
+
+  if (!recipe) {
+    return;
+  }
+
+  const confirmed = confirm(
+    `Voulez-vous vraiment supprimer "${recipe.name}" ?`,
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    if (recipe.localId) {
+      recipes = recipes.filter((item) => item.localId !== recipe.localId);
+    } else {
+      const response = await deleteRecipe(recipe.id);
+
+      recipes = recipes.filter((item) => item.id !== recipe.id);
+    }
+
+    displayRecipes(recipes, recipesContainer);
+
+    updateRecipeCount(recipes.length, recipesCount);
+
+    if (recipes.length === 0) {
+      emptyState.classList.remove("hidden");
+    } else {
+      emptyState.classList.add("hidden");
+    }
+  } catch (error) {
+    console.error("Erreur lors de la suppression :", error);
+  }
+});
