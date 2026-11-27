@@ -1,33 +1,29 @@
 
+import { getRecipes } from "./api.js";
+
 import {
-    getRecipes,
-    searchRecipes,
-    addRecipe,
-    deleteRecipe
-} from "./api.js";
+    displayRecipes,
+    updateRecipeCount,
+    showMessage
+} from "./display.js";
 
-// Test GET
-const recipes = await getRecipes();
-console.log("Recipes:", recipes);
+async function testDisplay() {
+    try {
+        const response = await getRecipes();
 
-// Test search
-const results = await searchRecipes("pizza");
-console.log("Search results:", results);
+        const container = document.querySelector("#recipes-container");
+        const counter = document.querySelector("#recipes-count");
+        const message = document.querySelector("#message");
 
-// Test POST
-const newRecipe = await addRecipe({
-    name: "Moroccan Couscous",
-    cuisine: "Moroccan",
-    difficulty: "Medium",
-    prepTimeMinutes: 45
-});
+        displayRecipes(response.recipes, container);
 
-console.log("Added recipe:", newRecipe);
+        updateRecipeCount(response.recipes.length, counter);
 
-// Test DELETE
-const deletedRecipe = await deleteRecipe(1);
-console.log("Deleted recipe:", deletedRecipe);
+        showMessage("Recettes chargées avec succès !", message);
 
-// reTest GET
-const newRecipes = await getRecipes();
-console.log("Recipes:", newRecipes);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+testDisplay();
